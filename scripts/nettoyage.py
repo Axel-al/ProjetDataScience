@@ -2,22 +2,20 @@ import os
 import pandas as pd
 
 # Colonnes d'intérêt
-COLONNES_UTILES = ["AAAAMMJJHH", "T", "U", "FF", "RR1", "N"]
+COLONNES_UTILES = ["AAAAMMJJHH", "T", "U", "FF", "RR1", "N", "LAT", "LON", "NUM_POSTE", "NOM_USUEL"]
 
 # Fonction de nettoyage
 def nettoyer_csv(path):
     df = pd.read_csv(path, sep=';', usecols=lambda c: c in COLONNES_UTILES, low_memory=False)
 
     # Conversion date
-    cols = ["datetime"] + [c for c in df.columns if c != "AAAAMMJJHH"]
+    cols = ["datetime"] + COLONNES_UTILES[1:]
     df["datetime"] = pd.to_datetime(df["AAAAMMJJHH"], format="%Y%m%d%H", errors="coerce")
     df = df[cols]
 
-    # Suppression lignes avec date invalide
-    df = df.dropna(subset=["datetime"]) 
-
+    
     # Suppression lignes vides sur les données
-    df = df.dropna(how="all", subset=["T", "U", "FF", "RR1", "N"])
+    df = df.dropna(how="all", subset=cols[:-4])
 
     return df
 

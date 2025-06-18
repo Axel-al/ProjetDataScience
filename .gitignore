@@ -1,3 +1,5 @@
 .vscode
 *.csv
 *.pyc
+*-checkpoint.ipynb
+*-checkpoint.html
